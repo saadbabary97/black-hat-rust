@@ -36,5 +36,6 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("password not found in wordlist :(");
     // as almost everything is an expression, this is equivalent to return Ok(());
+    // adding value there and we can find them
     Ok(())
 }
