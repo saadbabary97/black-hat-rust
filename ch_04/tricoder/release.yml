@@ -1,0 +1,49 @@
+name: Release
+
+# This workflow releases the docker image and deploy it on staging
+
+on:
+  push:
+    branches:
+      - release
+    # tags:
+    # - v*
+
+jobs:
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and tag Docker image
+        run: |
+          make docker
+
+      - name: Docker image info
+        run: docker images
+
+      - name: Login to container registries
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Push Docker images
+        run: |
+          docker push ghcr.io/${{ secrets.DOCKER_USERNAME }}/phaser
+
+
+  crates_io:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cargo login
+        run: |
+          cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: Cargo publish
+        run: |
+          cd phaser
+          make publish
