@@ -1,10 +1,10 @@
 use crate::spiders::Spider;
-use futures::stream::StreamExt;
+use futures::stream::StreamExt;    
 use std::{
-    collections::HashSet,
-    sync::{
-        atomic::{AtomicUsize, Ordering},
-        Arc,
+    collections::HashSet,       
+    sync::{     
+        atomic::{AtomicUsize, Ordering},        //Multiple thread are hitting so changed it to Atomic
+        Arc,            // Shared ownership
     },
     time::Duration,
 };
@@ -13,7 +13,7 @@ use tokio::{
     time::sleep,
 };
 
-pub struct Crawler {
+pub struct Crawler {                // Structure of the Crawler
     delay: Duration,
     crawling_concurrency: usize,
     processing_concurrency: usize,
@@ -89,7 +89,7 @@ impl Crawler {
                 break;
             }
 
-            sleep(Duration::from_millis(5)).await;
+            sleep(Duration::from_millis(5)).await;    // wait condition 
         }
 
         log::info!("crawler: control loop exited");
